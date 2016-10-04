@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">jessiestam-pset5_jaar 2_desktop</string>
+    <string name="todo_list_app_title">ToDo List</string>
+    <string name="list_delete_hint">Long-press to delete that list.</string>
+    <string name="user_list_input_hint">Name your newborn list here</string>
+    <string name="list_add_button_text">ADD</string>
+</resources>

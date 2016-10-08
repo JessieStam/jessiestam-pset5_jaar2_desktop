@@ -16,7 +16,7 @@ public class MainActivity extends FragmentActivity {
     String todo_list_title;
     EditText user_list_input;
     //String clicked_list;
-
+    TodoListFragment listFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,8 @@ public class MainActivity extends FragmentActivity {
         // construct new manager
         todo_manager = TodoManager.getOurInstance();
 
+        listFragment = new TodoListFragment();
+
     }
 
     public void addNewList(View view) {
@@ -48,6 +50,8 @@ public class MainActivity extends FragmentActivity {
 
         // create new TodoItem object and add to list
         todo_manager.createList(todo_list_title);
+
+        //listFragment.refreshList(todo_manager.getListTitleStrings());
 
         // add item to the SQLite
         //db_helper.create(new_item);

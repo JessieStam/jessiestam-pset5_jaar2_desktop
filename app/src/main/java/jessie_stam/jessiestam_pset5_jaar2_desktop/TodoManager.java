@@ -14,6 +14,7 @@ public class TodoManager {
     private static TodoManager ourInstance = null;
     private ArrayList<TodoList> todo_list_list = new ArrayList<>();
     private ArrayList<TodoItem> todo_item_list = new ArrayList<>();
+    private ArrayList<String> todo_list_list_strings = new ArrayList<>();
 
     // construct the instance
     public static TodoManager getOurInstance(){
@@ -45,7 +46,7 @@ public class TodoManager {
     /**
      * Create TodoItem for listview
      */
-    public TodoItem createItem (String list_title, String todo_item_string) {
+    public TodoItem createItem(String list_title, String todo_item_string) {
 
         // create new item and set id, list, title and status
         TodoItem todo_item = new TodoItem(todo_item_string);
@@ -82,6 +83,15 @@ public class TodoManager {
     }
 
     public ArrayList<TodoList> getListList() { return todo_list_list; }
+
+    public ArrayList<String> getListTitleStrings() {
+
+        for (TodoList todo : todo_list_list) {
+            String title = todo.getTitle();
+            todo_list_list_strings.add(title);
+        }
+        return todo_list_list_strings;
+    }
 
     public ArrayList<TodoItem> getItemList() { return todo_item_list; }
 

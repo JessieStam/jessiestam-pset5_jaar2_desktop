@@ -1,7 +1,5 @@
 package jessie_stam.jessiestam_pset5_jaar2_desktop;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 /**
@@ -17,6 +15,7 @@ public class TodoManager {
     private ArrayList<TodoList> todo_list_list = new ArrayList<>();
     private ArrayList<TodoItem> todo_item_list = new ArrayList<>();
     private ArrayList<String> todo_list_list_strings = new ArrayList<>();
+    private ArrayList<String> todo_list_item_strings = new ArrayList<>();
 
     // construct the instance
     public static TodoManager getOurInstance(){
@@ -70,12 +69,7 @@ public class TodoManager {
      */
     public void deleteList(String delete_list) {
 
-        Log.d("test", "inside deleteList");
-
         for (TodoList list : todo_list_list) {
-
-            Log.d("test", "deleteListe title: " + list.getTitle());
-
             if (list.getTitle().equals(delete_list)) {
                 todo_list_list.remove(list);
                 break;
@@ -87,6 +81,7 @@ public class TodoManager {
         for (TodoItem item : todo_item_list) {
             if (item.getTitle().equals(delete_item)) {
                 todo_item_list.remove(item);
+                break;
             }
         }
     }
@@ -107,5 +102,21 @@ public class TodoManager {
     }
 
     public ArrayList<TodoItem> getItemList() { return todo_item_list; }
+
+    public ArrayList<String> getItemTitleStrings(String list) {
+
+        if (todo_list_item_strings != null) {
+            todo_list_item_strings = new ArrayList<>();
+        }
+
+        for (TodoItem todo : todo_item_list) {
+            if (todo.getTodoList().equals(list)) {
+                String item = todo.getTitle();
+                todo_list_item_strings.add(item);
+            }
+        }
+        return todo_list_item_strings;
+
+    }
 
 }

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
@@ -27,6 +28,16 @@ public class TodoListFragment extends ListFragment {
 //        super.onAttach(context);
 //    }
 
+    public static TodoListFragment newInstance() {
+
+        TodoListFragment fragment = new TodoListFragment();
+        Bundle bundle = new Bundle();
+
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,11 +45,7 @@ public class TodoListFragment extends ListFragment {
 
         Log.d("test", "fragment created");
 
-        View todolist_view = inflater.inflate(R.layout.todolist_fragment, container, false);
-
-        todo_manager = TodoManager.getOurInstance();
-
-        return todolist_view;
+        return inflater.inflate(R.layout.todolist_fragment, container, false);
     }
 
 
@@ -48,7 +55,11 @@ public class TodoListFragment extends ListFragment {
 
         // plaats hier de lijst in de listview (nadat de lijst is opgehaald
 
+        main = new MainActivity();
+
         Log.d("test", "activity created");
+
+        todo_manager = TodoManager.getOurInstance();
 
         todo_list_list = todo_manager.getListTitleStrings();
 
@@ -58,11 +69,12 @@ public class TodoListFragment extends ListFragment {
         else {
             Log.d("test", "todo_list_list is leeg");
 
-            todo_list_list.add("test");
-            todo_list_list.add("test");
-            todo_list_list.add("test");
-            todo_list_list.add("test");
-            todo_list_list.add("test");
+        }
+
+        Log.d("test", "printing todo_list_list now");
+
+        for (String list : todo_list_list) {
+            Log.d("test", "todo_list_list title: " + list);
         }
 
         // Populate list with our array of titles.
@@ -71,33 +83,43 @@ public class TodoListFragment extends ListFragment {
 
         setListAdapter(todolist_adapter);
 
-//        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position,
-//                                           long id) {
-//
-//                // remove the item at the touched position and update data
-//                String remove_list = (String) adapterView.getItemAtPosition(position);
-//
-//                main.deleteList(remove_list);
-//
-//                todo_list_list.remove(remove_list);
-//                todolist_adapter.notifyDataSetChanged();
-//
-//                return true;
-//            }
-//        });
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position,
+                                           long id) {
+
+                // remove the item at the touched position and update data
+                String remove_list = (String) adapterView.getItemAtPosition(position);
+
+                //todo_list_list = todo_manager.getListTitleStrings();
+
+                for (String list : todo_list_list) {
+                    Log.d("test", "todo_list_list_title after click: " + list);
+                }
+
+                Log.d("test", "clicked item: " + remove_list);
+
+                todo_manager.deleteList(remove_list);
+
+                todo_list_list.remove(remove_list);
+
+                for (String list : todo_list_list) {
+                    Log.d("test", "todo_list_list_title after remove: " + list);
+                }
+
+                todolist_adapter.notifyDataSetChanged();
+
+                return true;
+            }
+        });
 
     }
 
-//    public void refreshList(ArrayList<String> list){
-//        this.todo_list_list.clear();
-//
-//        if(todo_list_list != null) {
-//            this.todo_list_list.addAll(list);
-//        }
-//        todolist_adapter.notifyDataSetChanged();
-//    }
+    public void refreshList(ArrayList<String> list){
+
+
+
+    }
 
 //    @Override
 //    public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -126,7 +148,6 @@ public class TodoListFragment extends ListFragment {
 //        String clicked_list = (String) screen_list_list.getItemAtPosition(position);
 //        main.moveToSecond(view, clicked_list);
 //    }
-
 
     @Override
     public void onStart() {

@@ -1,5 +1,7 @@
 package jessie_stam.jessiestam_pset5_jaar2_desktop;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -67,9 +69,16 @@ public class TodoManager {
      * Iterates over todo_list_list and checks if it's the list to be deleted
      */
     public void deleteList(String delete_list) {
+
+        Log.d("test", "inside deleteList");
+
         for (TodoList list : todo_list_list) {
+
+            Log.d("test", "deleteListe title: " + list.getTitle());
+
             if (list.getTitle().equals(delete_list)) {
                 todo_list_list.remove(list);
+                break;
             }
         }
     }
@@ -85,6 +94,10 @@ public class TodoManager {
     public ArrayList<TodoList> getListList() { return todo_list_list; }
 
     public ArrayList<String> getListTitleStrings() {
+
+        if (todo_list_list_strings != null) {
+            todo_list_list_strings = new ArrayList<>();
+        }
 
         for (TodoList todo : todo_list_list) {
             String title = todo.getTitle();

@@ -47,13 +47,11 @@
             android:textSize="17sp"
             android:layout_weight="0"/>
 
-        <fragment
+        <FrameLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            class="jessie_stam.jessiestam_pset5_jaar2_desktop.TodoListFragment"
             android:id="@+id/todo_list_list"
-            android:layout_weight="1"
-            tools:layout="@layout/todolist_fragment"/>
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:orientation="horizontal"

@@ -64,6 +64,16 @@ public class TodoManager {
         return todo_item;
     }
 
+    public TodoItem getTodoItem(String item_name) {
+
+        for (TodoItem item : todo_item_list) {
+            if (item.getTitle().equals(item_name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     /*
      * Iterates over todo_list_list and checks if it's the list to be deleted
      */
@@ -119,4 +129,12 @@ public class TodoManager {
 
     }
 
+    public void clearLists() {
+        list_id = 0;
+
+        todo_list_list.clear();
+        todo_item_list.clear();
+        todo_list_list_strings.clear();
+        todo_list_list_strings.clear();
+    }
 }

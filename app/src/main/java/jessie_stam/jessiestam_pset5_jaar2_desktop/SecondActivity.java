@@ -20,6 +20,7 @@ public class SecondActivity extends MainActivity {
     EditText user_item_input;
     TodoManager todo_manager;
     DBHelper db_helper;
+    TodoItemFragment fragment;
 
     FrameLayout fragment_container;
     FragmentManager fragment_manager;
@@ -30,7 +31,7 @@ public class SecondActivity extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        refreshFragment();
+        createFragment();
 
         Bundle extras = getIntent().getExtras();
         list_title = extras.getString("list_title");
@@ -41,6 +42,8 @@ public class SecondActivity extends MainActivity {
         user_item_input = (EditText) findViewById(R.id.user_item_input);
 
         todo_manager = TodoManager.getOurInstance();
+
+        refreshFragment();
 
         db_helper = new DBHelper(this);
 
@@ -63,23 +66,19 @@ public class SecondActivity extends MainActivity {
 
     }
 
-//    public String addListTitle() {
-//        return list_title;
-//    }
+    public void createFragment() {
 
-//    public void createFragment() {
-//
-//        fragment_manager = getSupportFragmentManager();
-//        fragment_transaction = fragment_manager.beginTransaction();
-//
-//        TodoItemFragment fragment = TodoItemFragment.newInstance();
-//        Bundle title = new Bundle();
-//
-//        title.putString("list_title", list_title);
-//        fragment.setArguments(title);
-//
-//        fragment_transaction.add(R.id.todo_item_list, fragment).commit();
-//    }
+        fragment_manager = getSupportFragmentManager();
+        fragment_transaction = fragment_manager.beginTransaction();
+
+        fragment = TodoItemFragment.newInstance();
+        Bundle title = new Bundle();
+
+        title.putString("list_title", list_title);
+        fragment.setArguments(title);
+
+        fragment_transaction.add(R.id.todo_item_list, fragment).commit();
+    }
 
     public void refreshFragment() {
 
@@ -95,6 +94,33 @@ public class SecondActivity extends MainActivity {
         fragment_transaction.replace(R.id.todo_item_list, fragment).commit();
 
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        todo_manager.clearLists();
+//
+//        // read SQLite database
+//        db_list = db_helper.read_item();
+//
+//        // iterate over TodoItems in databases
+//        for (HashMap<String, String> hashmap : db_list) {
+//
+//            // save id, title and status
+//            String retrieved_id = hashmap.get("_id");
+//            String retrieved_list = hashmap.get("todo_list");
+//            String retrieved_title = hashmap.get("todo_text");
+//            String retrieved_status = hashmap.get("current_status");
+//
+//            todo_manager.createList(retrieved_list);
+//
+//            // recreate TodoItem and put in list
+//            TodoItem new_item = todo_manager.createItem(retrieved_list, retrieved_title);
+//            new_item.setId(Integer.parseInt(retrieved_id));
+//            new_item.setCurrentStatus(retrieved_status);
+//        }
+//    }
 
 
 }

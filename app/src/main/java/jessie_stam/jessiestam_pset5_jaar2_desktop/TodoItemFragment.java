@@ -1,7 +1,9 @@
 package jessie_stam.jessiestam_pset5_jaar2_desktop;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jessie on 7-10-2016.
@@ -22,7 +26,10 @@ public class TodoItemFragment extends ListFragment {
     TodoManager todo_manager;
     String list_title;
     DBHelper db_helper;
-    ArrayList<TodoItem> item_list;
+    ArrayList<HashMap<String, String>> db_list;
+
+    String update_todo;
+    String current_status;
 
     public static TodoItemFragment newInstance() {
 
@@ -51,6 +58,7 @@ public class TodoItemFragment extends ListFragment {
         todo_manager = TodoManager.getOurInstance();
 
         db_helper = new DBHelper(getActivity());
+        db_list = new ArrayList<>();
 
         todo_item_list = todo_manager.getItemTitleStrings(list_title);
 
@@ -67,13 +75,13 @@ public class TodoItemFragment extends ListFragment {
 
                 // remove the item at the touched position and update data
                 String remove_item = (String) adapterView.getItemAtPosition(position);
+                int remove_id = todo_manager.getTodoItem(remove_item).getId();
+
                 todo_manager.deleteItem(remove_item);
                 todo_item_list.remove(remove_item);
                 todoitem_adapter.notifyDataSetChanged();
 
                 //remove title from the SQLite
-                int remove_id = getTodoItem(remove_item).getId();
-
                 db_helper.delete(remove_id);
 
                 return true;
@@ -86,21 +94,46 @@ public class TodoItemFragment extends ListFragment {
     public void onListItemClick(ListView screen_list_list, View view, int position, long id) {
         super.onListItemClick(screen_list_list, view, position, id);
 
+        // read SQLite database to get status of clicked item
+        db_list = db_helper.read_item();
+        String clicked_item = (String) screen_list_list.getItemAtPosition(position);
 
+        // iterate over TodoItems and its entries in database list
+        for (HashMap<String, String> hashmap : db_list) {
+            for (Map.Entry<String, String> hashmap_entry : hashmap.entrySet()) {
 
-    }
+                //when matching TodoItem text for clicked item is found, get status
+                if (hashmap_entry.toString().equals("todo_text=" + clicked_item)) {
+                    update_todo = hashmap.get("todo_text");
+                    current_status = hashmap.get("current_status");
 
-    public TodoItem getTodoItem(String item_name) {
-
-        item_list = todo_manager.getItemList();
-
-        for (TodoItem item : item_list) {
-            if (item.getTitle().equals(item_name)) {
-                return item;
+                    Log.d("test", "current_status of " + hashmap_entry.toString() + "is " + current_status);
+                }
             }
         }
-        return null;
+
+        // change the background color of clicked item
+        if (current_status != null) {
+            changeItemColor(view, current_status);
+        }
+
+        // update status of clicked item in SQLite database
+        db_helper.update(todo_manager.getTodoItem(clicked_item));
+
     }
+
+    public void changeItemColor(View view, String status) {
+
+        switch(status) {
+            case ("unfinished"):
+                view.setBackgroundColor(Color.GRAY);
+                break;
+            case ("finished"):
+                view.setBackgroundColor(Color.WHITE);
+                break;
+        }
+    }
+
 
     @Override
     public void onStart() {

@@ -19,8 +19,10 @@ import java.util.ArrayList;
 public class TodoListFragment extends ListFragment {
 
     ArrayAdapter todolist_adapter;
+    ArrayList<TodoItem> todo_items_list;
     ArrayList<String> todo_list_list;
     TodoManager todo_manager;
+    DBHelper db_helper;
 
     public static TodoListFragment newInstance() {
 
@@ -46,6 +48,9 @@ public class TodoListFragment extends ListFragment {
         //main = new MainActivity();
         todo_manager = TodoManager.getOurInstance();
 
+        db_helper = new DBHelper(getActivity());
+
+        todo_items_list = new ArrayList<>();
         todo_list_list = todo_manager.getListTitleStrings();
 
         // Populate list with our array of titles.
@@ -61,6 +66,28 @@ public class TodoListFragment extends ListFragment {
 
                 // remove the item at the touched position and update data
                 String remove_list = (String) adapterView.getItemAtPosition(position);
+
+                ArrayList<String> delete_items = new ArrayList<String>();
+
+                todo_items_list = todo_manager.getItemList();
+
+                if (todo_items_list != null) {
+                    for (TodoItem item : todo_items_list) {
+                        if (item.getTodoList().equals(remove_list)) {
+                            //todo_manager.deleteItem(item.getTitle());
+
+                            delete_items.add(item.getTitle());
+
+                            int remove_id = item.getId();
+                            db_helper.delete(remove_id);
+                        }
+                    }
+
+                    for (String item : delete_items) {
+                        todo_manager.deleteItem(item);
+                    }
+                }
+
                 todo_manager.deleteList(remove_list);
                 todo_list_list.remove(remove_list);
                 todolist_adapter.notifyDataSetChanged();

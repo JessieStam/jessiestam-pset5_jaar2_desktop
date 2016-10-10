@@ -34,8 +34,8 @@ public class TodoItemFragment extends ListFragment {
     public static TodoItemFragment newInstance() {
 
         TodoItemFragment fragment = new TodoItemFragment();
-        Bundle bundle = new Bundle();
-        fragment.setArguments(bundle);
+//        Bundle bundle = new Bundle();
+//        fragment.setArguments(bundle);
 
         return fragment;
     }
@@ -144,4 +144,34 @@ public class TodoItemFragment extends ListFragment {
     public void onPause() {
         super.onPause();
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        todo_manager.clearItemList();
+//
+//        // read SQLite database
+//        db_list = db_helper.read_item();
+//
+//        // iterate over TodoItems in databases
+//        for (HashMap<String, String> hashmap : db_list) {
+//
+//            // save id, title and status
+//            String retrieved_id = hashmap.get("_id");
+//            String retrieved_list = hashmap.get("todo_list");
+//            String retrieved_title = hashmap.get("todo_text");
+//            String retrieved_status = hashmap.get("current_status");
+//
+//            //todo_manager.createList(retrieved_list);
+//
+//            // recreate TodoItem and put in list
+//            TodoItem new_item = todo_manager.createItem(retrieved_list, retrieved_title);
+//            new_item.setId(Integer.parseInt(retrieved_id));
+//            new_item.setCurrentStatus(retrieved_status);
+//
+//            todoitem_adapter.notifyDataSetChanged();
+//
+//        }
+//    }
 }

@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends FragmentActivity {
 
@@ -78,32 +80,39 @@ public class MainActivity extends FragmentActivity {
 
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//        todo_manager.clearLists();
-//
-//        // read SQLite database
-//        db_list = db_helper.read_item();
-//
-//        // iterate over TodoItems in databases
-//        for (HashMap<String, String> hashmap : db_list) {
-//
-//            // save id, title and status
-//            //String retrieved_id = hashmap.get("_id");
-//            String retrieved_list = hashmap.get("todo_list");
-////            String retrieved_title = hashmap.get("todo_text");
-////            String retrieved_status = hashmap.get("current_status");
-//
-//            todo_manager.createList(retrieved_list);
-//
-////            // recreate TodoItem and put in list
-////            TodoItem new_item = todo_manager.createItem(retrieved_list, retrieved_title);
-////            new_item.setId(Integer.parseInt(retrieved_id));
-////            new_item.setCurrentStatus(retrieved_status);
-//
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        todo_manager.clearListList();
+
+        // read SQLite database
+        db_list = db_helper.read_item();
+
+        // iterate over TodoItems in databases
+        for (HashMap<String, String> hashmap : db_list) {
+            for (Map.Entry<String, String> entry : hashmap.entrySet()) {
+
+                Log.d("test", "hashmap item: " + entry);
+
+            }
+
+            // save id, title and status
+            String retrieved_id = hashmap.get("_id");
+            String retrieved_list = hashmap.get("todo_list");
+            String retrieved_title = hashmap.get("todo_text");
+            String retrieved_status = hashmap.get("current_status");
+
+            todo_manager.createList(retrieved_list);
+
+            // recreate TodoItem and put in list
+            TodoItem new_item = todo_manager.createItem(retrieved_list, retrieved_title);
+            new_item.setId(Integer.parseInt(retrieved_id));
+            new_item.setCurrentStatus(retrieved_status);
+
+        }
+
+        refreshFragment();
+    }
 }
 

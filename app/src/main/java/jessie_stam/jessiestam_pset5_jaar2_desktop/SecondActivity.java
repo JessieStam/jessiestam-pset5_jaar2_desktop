@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 /**
  * Created by Jessie on 4-10-2016.
  */
@@ -95,32 +97,34 @@ public class SecondActivity extends MainActivity {
 
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//        todo_manager.clearLists();
-//
-//        // read SQLite database
-//        db_list = db_helper.read_item();
-//
-//        // iterate over TodoItems in databases
-//        for (HashMap<String, String> hashmap : db_list) {
-//
-//            // save id, title and status
-//            String retrieved_id = hashmap.get("_id");
-//            String retrieved_list = hashmap.get("todo_list");
-//            String retrieved_title = hashmap.get("todo_text");
-//            String retrieved_status = hashmap.get("current_status");
-//
-//            todo_manager.createList(retrieved_list);
-//
-//            // recreate TodoItem and put in list
-//            TodoItem new_item = todo_manager.createItem(retrieved_list, retrieved_title);
-//            new_item.setId(Integer.parseInt(retrieved_id));
-//            new_item.setCurrentStatus(retrieved_status);
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        todo_manager.clearItemList();
+
+        // read SQLite database
+        db_list = db_helper.read_item();
+
+        // iterate over TodoItems in databases
+        for (HashMap<String, String> hashmap : db_list) {
+
+            // save id, title and status
+            String retrieved_id = hashmap.get("_id");
+            String retrieved_list = hashmap.get("todo_list");
+            String retrieved_title = hashmap.get("todo_text");
+            String retrieved_status = hashmap.get("current_status");
+
+            todo_manager.createList(retrieved_list);
+
+            // recreate TodoItem and put in list
+            TodoItem new_item = todo_manager.createItem(retrieved_list, retrieved_title);
+            new_item.setId(Integer.parseInt(retrieved_id));
+            new_item.setCurrentStatus(retrieved_status);
+        }
+
+        refreshFragment();
+    }
 
 
 }

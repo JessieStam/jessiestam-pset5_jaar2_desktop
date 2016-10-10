@@ -31,6 +31,13 @@ public class TodoManager {
      */
     public TodoList createList (String todo_list_string) {
 
+        for (TodoList list : todo_list_list) {
+            if (list.getTitle().equals(todo_list_string)) {
+                // list already exists
+                return list;
+            }
+        }
+
         // create new list and set id and title
         TodoList todo_list = new TodoList(todo_list_string);
         todo_list.setTitle(todo_list_string);
@@ -129,12 +136,17 @@ public class TodoManager {
 
     }
 
-    public void clearLists() {
+    public void clearListList() {
         list_id = 0;
 
         todo_list_list.clear();
+        //todo_item_list.clear();
+        todo_list_list_strings.clear();
+        //todo_list_item_strings.clear();
+    }
+
+    public void clearItemList() {
         todo_item_list.clear();
-        todo_list_list_strings.clear();
-        todo_list_list_strings.clear();
+        todo_list_item_strings.clear();
     }
 }

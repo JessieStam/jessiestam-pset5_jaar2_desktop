@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Jessie on 7-10-2016.
@@ -21,14 +22,15 @@ public class TodoListFragment extends ListFragment {
     ArrayAdapter todolist_adapter;
     ArrayList<TodoItem> todo_items_list;
     ArrayList<String> todo_list_list;
+    ArrayList<HashMap<String, String>> db_list;
     TodoManager todo_manager;
     DBHelper db_helper;
 
     public static TodoListFragment newInstance() {
 
         TodoListFragment fragment = new TodoListFragment();
-        Bundle bundle = new Bundle();
-        fragment.setArguments(bundle);
+//        Bundle bundle = new Bundle();
+//        fragment.setArguments(bundle);
 
         return fragment;
     }
@@ -67,7 +69,7 @@ public class TodoListFragment extends ListFragment {
                 // remove the item at the touched position and update data
                 String remove_list = (String) adapterView.getItemAtPosition(position);
 
-                ArrayList<String> delete_items = new ArrayList<String>();
+                ArrayList<String> delete_items = new ArrayList<>();
 
                 todo_items_list = todo_manager.getItemList();
 
@@ -113,15 +115,33 @@ public class TodoListFragment extends ListFragment {
         TodoListFragment.this.startActivity(moveToSecond);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        todo_manager.clearListList();
+//
+//        // read SQLite database
+//        db_list = db_helper.read_item();
+//
+//        // iterate over TodoItems in databases
+//        for (HashMap<String, String> hashmap : db_list) {
+//
+//            // save id, title and status
+//            //String retrieved_id = hashmap.get("_id");
+//            String retrieved_list = hashmap.get("todo_list");
+////            String retrieved_title = hashmap.get("todo_text");
+////            String retrieved_status = hashmap.get("current_status");
+//
+//            todo_manager.createList(retrieved_list);
+//            todolist_adapter.notifyDataSetChanged();
+//
+//            // recreate TodoItem and put in list
+////            TodoItem new_item = todo_manager.createItem(retrieved_list, retrieved_title);
+////            new_item.setId(Integer.parseInt(retrieved_id));
+////            new_item.setCurrentStatus(retrieved_status);
+//        }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
+//        }
 
 }

@@ -10,7 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Jessie on 4-10-2016.
+ * Many TodoLists - DBHelper
+ *
+ * Jessie Stam
+ *
+ * A SQLite database in which TodoItems are stored.
  */
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -31,7 +35,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase dataBase) {
 
         // create the table, add id, todo_item and current_status
-        String query = "CREATE TABLE " + TABLE + "(_id " + "INTEGER PRIMARY KEY, " + "todo_list, " + "todo_text TEXT, " + "current_status TEXT);";
+        String query = "CREATE TABLE " + TABLE + "(_id " + "INTEGER PRIMARY KEY, " + "todo_list, "
+                + "todo_text TEXT, " + "current_status TEXT);";
         dataBase.execSQL(query);
     }
 
@@ -70,7 +75,8 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase dataBase = getReadableDatabase();
 
         // select values from the table
-        String query = "SELECT _id, " + "todo_list, " + "todo_text, " + "current_status " + "FROM " + TABLE;
+        String query = "SELECT _id, " + "todo_list, " + "todo_text, " + "current_status " + "FROM "
+                + TABLE;
 
         ArrayList<HashMap<String, String>> todo_list = new ArrayList<>();
         Cursor cursor = dataBase.rawQuery(query, null);
@@ -98,7 +104,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /*
-     * Update database: change the status and check text and id
+     * Update database: change the status and check list, text and id
      */
     public void update(TodoItem todo_item) {
 

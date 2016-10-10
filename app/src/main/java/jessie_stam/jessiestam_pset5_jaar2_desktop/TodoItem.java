@@ -1,15 +1,16 @@
 package jessie_stam.jessiestam_pset5_jaar2_desktop;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
- * Created by Jessie on 4-10-2016.
+ * Many TodoLists - TodoItem
+ *
+ * Jessie Stam
+ *
+ * A helper class with getters and setters that creates TodoItem items.
  */
 
-public class TodoItem implements Parcelable {
+public class TodoItem {
 
-    // fields for id, item and status
+    // fields for id, item, status and list
     private int id;
     private String todo_item;
     private String current_status;
@@ -33,35 +34,4 @@ public class TodoItem implements Parcelable {
     // methods for list
     public String getTodoList() { return todo_list; }
     public void setTodoList(String new_list) { todo_list = new_list; }
-
-    private TodoItem(Parcel in) {
-        id = in.readInt();
-        todo_item = in.readString();
-        current_status = in.readString();
-        todo_list = in.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel out, int i) {
-        out.writeInt(id);
-        out.writeString(todo_item);
-        out.writeString(current_status);
-        out.writeString(todo_list);
-    }
-
-    public static final Parcelable.Creator<TodoItem> CREATOR = new Parcelable.Creator<TodoItem>() {
-        public TodoItem createFromParcel(Parcel in) {
-            return new TodoItem(in);
-        }
-
-        @Override
-        public TodoItem[] newArray(int size) {
-            return new TodoItem[0];
-        }
-    };
 }

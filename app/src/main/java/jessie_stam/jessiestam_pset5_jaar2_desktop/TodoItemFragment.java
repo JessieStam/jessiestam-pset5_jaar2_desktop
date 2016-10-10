@@ -3,7 +3,6 @@ package jessie_stam.jessiestam_pset5_jaar2_desktop;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Jessie on 7-10-2016.
+ * Many TodoLists - TodoItemFragment
+ *
+ * Jessie Stam
+ *
+ * Displays a list of to-do item. On long-click, an item is removed from the ListView and databases.
+ * When an item is clicked, the color changes to show that the to-do has been finished.
  */
 
 public class TodoItemFragment extends ListFragment {
@@ -27,15 +31,16 @@ public class TodoItemFragment extends ListFragment {
     String list_title;
     DBHelper db_helper;
     ArrayList<HashMap<String, String>> db_list;
-
+    ListView list_view;
     String update_todo;
     String current_status;
 
     public static TodoItemFragment newInstance() {
 
         TodoItemFragment fragment = new TodoItemFragment();
-//        Bundle bundle = new Bundle();
-//        fragment.setArguments(bundle);
+        Bundle bundle = new Bundle();
+
+        fragment.setArguments(bundle);
 
         return fragment;
     }
@@ -43,8 +48,7 @@ public class TodoItemFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
+        // Inflate the layout for this fragment, fetch to-do list title from Second Activity
         Bundle title = getArguments();
         list_title = title.getString("list_title");
 
@@ -55,6 +59,7 @@ public class TodoItemFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // construct Manager, Database, ArrayList to put into the ListView, and its Adapter
         todo_manager = TodoManager.getOurInstance();
 
         db_helper = new DBHelper(getActivity());
@@ -68,28 +73,33 @@ public class TodoItemFragment extends ListFragment {
 
         setListAdapter(todoitem_adapter);
 
+        /**
+         * When item is long-clicked, delete it
+         */
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position,
                                            long id) {
 
-                // remove the item at the touched position and update data
+                // construct string and id for item to be deleted
                 String remove_item = (String) adapterView.getItemAtPosition(position);
                 int remove_id = todo_manager.getTodoItem(remove_item).getId();
 
+                // delete item from Manager, database and ListView and update ListView
                 todo_manager.deleteItem(remove_item);
                 todo_item_list.remove(remove_item);
                 todoitem_adapter.notifyDataSetChanged();
 
-                //remove title from the SQLite
                 db_helper.delete(remove_id);
 
                 return true;
             }
         });
-
     }
 
+    /**
+     * When list item is clicked, change its background color to "complete" the to-do
+     */
     @Override
     public void onListItemClick(ListView screen_list_list, View view, int position, long id) {
         super.onListItemClick(screen_list_list, view, position, id);
@@ -106,22 +116,22 @@ public class TodoItemFragment extends ListFragment {
                 if (hashmap_entry.toString().equals("todo_text=" + clicked_item)) {
                     update_todo = hashmap.get("todo_text");
                     current_status = hashmap.get("current_status");
-
-                    Log.d("test", "current_status of " + hashmap_entry.toString() + "is " + current_status);
                 }
             }
         }
 
-        // change the background color of clicked item
+        // change the background color of clicked item according to status
         if (current_status != null) {
             changeItemColor(view, current_status);
         }
 
         // update status of clicked item in SQLite database
         db_helper.update(todo_manager.getTodoItem(clicked_item));
-
     }
 
+    /**
+     * Changes the background color of to-do item
+     */
     public void changeItemColor(View view, String status) {
 
         switch(status) {
@@ -133,45 +143,4 @@ public class TodoItemFragment extends ListFragment {
                 break;
         }
     }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        todo_manager.clearItemList();
-//
-//        // read SQLite database
-//        db_list = db_helper.read_item();
-//
-//        // iterate over TodoItems in databases
-//        for (HashMap<String, String> hashmap : db_list) {
-//
-//            // save id, title and status
-//            String retrieved_id = hashmap.get("_id");
-//            String retrieved_list = hashmap.get("todo_list");
-//            String retrieved_title = hashmap.get("todo_text");
-//            String retrieved_status = hashmap.get("current_status");
-//
-//            //todo_manager.createList(retrieved_list);
-//
-//            // recreate TodoItem and put in list
-//            TodoItem new_item = todo_manager.createItem(retrieved_list, retrieved_title);
-//            new_item.setId(Integer.parseInt(retrieved_id));
-//            new_item.setCurrentStatus(retrieved_status);
-//
-//            todoitem_adapter.notifyDataSetChanged();
-//
-//        }
-//    }
 }

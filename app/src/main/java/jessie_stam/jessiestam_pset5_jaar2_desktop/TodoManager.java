@@ -3,15 +3,22 @@ package jessie_stam.jessiestam_pset5_jaar2_desktop;
 import java.util.ArrayList;
 
 /**
- * Created by Jessie on 4-10-2016.
+ * Many TodoLists - TodoManager
+ *
+ * Jessie Stam
+ *
+ * A singleton class that creates and deletes TodoLists and TodoItems and manages the ListViews in
+ * which they are displayed.
  */
 
 public class TodoManager {
 
-    // define id and instance
+    // define id's and instance
     private Integer list_id = 0;
     private Integer item_id = 0;
     private static TodoManager ourInstance = null;
+
+    // define lists to store data
     private ArrayList<TodoList> todo_list_list = new ArrayList<>();
     private ArrayList<TodoItem> todo_item_list = new ArrayList<>();
     private ArrayList<String> todo_list_list_strings = new ArrayList<>();
@@ -27,13 +34,13 @@ public class TodoManager {
     }
 
     /**
-     * Create TodoList for listview
+     * Create TodoList for ListView
      */
     public TodoList createList (String todo_list_string) {
 
+        // stop user from adding a double list
         for (TodoList list : todo_list_list) {
             if (list.getTitle().equals(todo_list_string)) {
-                // list already exists
                 return list;
             }
         }
@@ -43,16 +50,15 @@ public class TodoManager {
         todo_list.setTitle(todo_list_string);
         todo_list.setId(list_id);
 
-        // update id for next item
+        // update id for next item and add TodoList to list
         list_id += 1;
-
         todo_list_list.add(todo_list);
 
         return todo_list;
     }
 
     /**
-     * Create TodoItem for listview
+     * Create TodoItem for ListView
      */
     public TodoItem createItem(String list_title, String todo_item_string) {
 
@@ -63,14 +69,16 @@ public class TodoManager {
         todo_item.setId(item_id);
         todo_item.setCurrentStatus("unfinished");
 
-        // update id for next item
+        // update id for next item and add TodoItem to list
         item_id += 1;
-
         todo_item_list.add(todo_item);
 
         return todo_item;
     }
 
+    /**
+     * Returns TodoItem for given string
+     */
     public TodoItem getTodoItem(String item_name) {
 
         for (TodoItem item : todo_item_list) {
@@ -88,23 +96,34 @@ public class TodoManager {
 
         for (TodoList list : todo_list_list) {
             if (list.getTitle().equals(delete_list)) {
+                // delete list from list
                 todo_list_list.remove(list);
                 break;
             }
         }
     }
 
+    /**
+     * Iterates over todo_item_list and checks if it's the list to be deleted
+     */
     public void deleteItem(String delete_item) {
         for (TodoItem item : todo_item_list) {
             if (item.getTitle().equals(delete_item)) {
+                // delete item from list
                 todo_item_list.remove(item);
                 break;
             }
         }
     }
 
+    /**
+     * Returns the list of to-do lists
+     */
     public ArrayList<TodoList> getListList() { return todo_list_list; }
 
+    /**
+     * Returns the list of to-do list titles
+     */
     public ArrayList<String> getListTitleStrings() {
 
         if (todo_list_list_strings != null) {
@@ -118,8 +137,14 @@ public class TodoManager {
         return todo_list_list_strings;
     }
 
+    /**
+     * Returns the list of to-do items
+     */
     public ArrayList<TodoItem> getItemList() { return todo_item_list; }
 
+    /**
+     * Returns the list of to-do item titles
+     */
     public ArrayList<String> getItemTitleStrings(String list) {
 
         if (todo_list_item_strings != null) {
@@ -136,15 +161,19 @@ public class TodoManager {
 
     }
 
+    /**
+     * Deletes all of the lists inside the lists
+     */
     public void clearListList() {
         list_id = 0;
 
         todo_list_list.clear();
-        //todo_item_list.clear();
         todo_list_list_strings.clear();
-        //todo_list_item_strings.clear();
     }
 
+    /**
+     * Deletes all of the items inside this lists
+     */
     public void clearItemList() {
         todo_item_list.clear();
         todo_list_item_strings.clear();

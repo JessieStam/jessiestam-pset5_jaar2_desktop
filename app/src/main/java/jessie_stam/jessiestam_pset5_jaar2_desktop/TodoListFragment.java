@@ -11,26 +11,28 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
- * Created by Jessie on 7-10-2016.
+ * Many TodoLists - TodoListFragment
+ *
+ * Jessie Stam
+ *
+ * Displays a list of to-do lists. On long-click, a list is removed from the ListView and databases.
+ * When a list is clicked, the app moves on to Second Activity and TodoItemFragment is opened.
  */
-
 public class TodoListFragment extends ListFragment {
 
     ArrayAdapter todolist_adapter;
     ArrayList<TodoItem> todo_items_list;
     ArrayList<String> todo_list_list;
-    ArrayList<HashMap<String, String>> db_list;
     TodoManager todo_manager;
     DBHelper db_helper;
 
     public static TodoListFragment newInstance() {
 
         TodoListFragment fragment = new TodoListFragment();
-//        Bundle bundle = new Bundle();
-//        fragment.setArguments(bundle);
+        Bundle bundle = new Bundle();
+        fragment.setArguments(bundle);
 
         return fragment;
     }
@@ -38,7 +40,7 @@ public class TodoListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this Fragment
         return inflater.inflate(R.layout.todolist_fragment, container, false);
     }
 
@@ -46,8 +48,7 @@ public class TodoListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
-        //main = new MainActivity();
+        // construct Manager, Database, ArrayList to put into the ListView, and its Adapter
         todo_manager = TodoManager.getOurInstance();
 
         db_helper = new DBHelper(getActivity());
@@ -55,41 +56,46 @@ public class TodoListFragment extends ListFragment {
         todo_items_list = new ArrayList<>();
         todo_list_list = todo_manager.getListTitleStrings();
 
-        // Populate list with our array of titles.
         todolist_adapter = new ArrayAdapter<>(getActivity(), R.layout.listview_layout,
                 R.id.listview_text, todo_list_list);
 
         setListAdapter(todolist_adapter);
 
+        /**
+         * When list item is long-clicked, delete it
+         */
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position,
                                            long id) {
 
-                // remove the item at the touched position and update data
+                // construct string and list for item to be deleted
                 String remove_list = (String) adapterView.getItemAtPosition(position);
-
                 ArrayList<String> delete_items = new ArrayList<>();
 
+                // iterate over TodoItems to get the items that are in the clicked list
                 todo_items_list = todo_manager.getItemList();
 
                 if (todo_items_list != null) {
                     for (TodoItem item : todo_items_list) {
+                        // if items are in the clicked list, add to list of items to remove
                         if (item.getTodoList().equals(remove_list)) {
-                            //todo_manager.deleteItem(item.getTitle());
 
                             delete_items.add(item.getTitle());
 
+                            // get id for items in list and remove from database
                             int remove_id = item.getId();
                             db_helper.delete(remove_id);
                         }
                     }
 
+                    // delete items in the delete list from ListView
                     for (String item : delete_items) {
                         todo_manager.deleteItem(item);
                     }
                 }
 
+                // delete the clicked list from Manager and from ListView and update ListView
                 todo_manager.deleteList(remove_list);
                 todo_list_list.remove(remove_list);
                 todolist_adapter.notifyDataSetChanged();
@@ -100,48 +106,20 @@ public class TodoListFragment extends ListFragment {
 
     }
 
+    /**
+     * When list item is clicked, move to Second Activity
+     */
     @Override
     public void onListItemClick(ListView screen_list_list, View view, int position, long id) {
         super.onListItemClick(screen_list_list, view, position, id);
 
-        // save title, move to second
+        // save to-do list title, move to Second Activity
         String clicked_list = (String) screen_list_list.getItemAtPosition(position);
-
-        // MainActivity activity = (MainActivity) getActivity();
 
         Intent moveToSecond = new Intent(getActivity(), SecondActivity.class);
         moveToSecond.putExtra("list_title", clicked_list);
 
         TodoListFragment.this.startActivity(moveToSecond);
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        todo_manager.clearListList();
-//
-//        // read SQLite database
-//        db_list = db_helper.read_item();
-//
-//        // iterate over TodoItems in databases
-//        for (HashMap<String, String> hashmap : db_list) {
-//
-//            // save id, title and status
-//            //String retrieved_id = hashmap.get("_id");
-//            String retrieved_list = hashmap.get("todo_list");
-////            String retrieved_title = hashmap.get("todo_text");
-////            String retrieved_status = hashmap.get("current_status");
-//
-//            todo_manager.createList(retrieved_list);
-//            todolist_adapter.notifyDataSetChanged();
-//
-//            // recreate TodoItem and put in list
-////            TodoItem new_item = todo_manager.createItem(retrieved_list, retrieved_title);
-////            new_item.setId(Integer.parseInt(retrieved_id));
-////            new_item.setCurrentStatus(retrieved_status);
-//        }
-
-//        }
 
 }
